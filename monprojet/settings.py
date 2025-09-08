@@ -26,13 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-only')
+SECRET_KEY = os.getenv('SECRET_KEY', 'e*0=q3*u24=g)nnew%jkthmluo2let$ia9j#$($ia-8+dl=^2+')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 # Configuration des hôtes autorisés
-DEFAULT_ALLOWED_HOSTS = 'localhost,127.0.0.1,.cleverapps.io,.clever-cloud.com'
+DEFAULT_ALLOWED_HOSTS = 'localhost,127.0.0.1,.vercel.app,.onrender.com'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', DEFAULT_ALLOWED_HOSTS).split(',')
 
 
