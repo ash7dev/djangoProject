@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h4 class="card-title mb-0">
+                    <i class="fas fa-chalkboard-teacher"></i> {{ titre }}
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Nom -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.nom.id_for_label }}" class="form-label">
+                                <i class="fas fa-user text-info"></i> Nom *
+                            </label>
+                            {{ form.nom }}
+                            {% if form.nom.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.nom.errors %}
+                                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Nom de famille du professeur
+                            </div>
+                        </div>
+
+                        <!-- Prénom -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.prenom.id_for_label }}" class="form-label">
+                                <i class="fas fa-user text-info"></i> Prénom *
+                            </label>
+                            {{ form.prenom }}
+                            {% if form.prenom.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.prenom.errors %}
+                                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Prénom du professeur
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Email -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">
+                                <i class="fas fa-envelope text-info"></i> Email
+                            </label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.email.errors %}
+                                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Adresse email professionnelle
+                            </div>
+                        </div>
+
+                        <!-- Téléphone -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.telephone.id_for_label }}" class="form-label">
+                                <i class="fas fa-phone text-info"></i> Téléphone
+                            </label>
+                            {{ form.telephone }}
+                            {% if form.telephone.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.telephone.errors %}
+                                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Numéro de téléphone professionnel
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Spécialité -->
+                    <div class="mb-3">
+                        <label for="{{ form.specialite.id_for_label }}" class="form-label">
+                            <i class="fas fa-graduation-cap text-info"></i> Spécialité
+                        </label>
+                        {{ form.specialite }}
+                        {% if form.specialite.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.specialite.errors %}
+                                    <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i> Domaine de spécialisation du professeur
+                        </div>
+                    </div>
+
+                    <!-- Statut actif -->
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.actif }}
+                            <label class="form-check-label" for="{{ form.actif.id_for_label }}">
+                                <i class="fas fa-check-circle text-success"></i> Professeur actif
+                            </label>
+                        </div>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i> Décochez pour désactiver le professeur
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'liste_professeurs' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Retour à la liste
+                        </a>
+                        <div>
+                            <button type="reset" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-undo"></i> Réinitialiser
+                            </button>
+                            <button type="submit" class="btn btn-info">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

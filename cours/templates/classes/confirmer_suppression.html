@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmer la suppression{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Confirmer la suppression
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-exclamation-triangle"></i> Attention !
+                        </h5>
+                        <p class="mb-0">
+                            Êtes-vous sûr de vouloir supprimer cette classe ? Cette action est irréversible.
+                        </p>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-info-circle"></i> Détails de la classe</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-1"><strong>Nom :</strong> {{ objet.nom }}</p>
+                            <p class="mb-1"><strong>Niveau :</strong> {{ objet.get_niveau_display }}</p>
+                            <p class="mb-1"><strong>Effectif maximum :</strong> {{ objet.effectif_max }} étudiants</p>
+                            <p class="mb-1">
+                                <strong>Filières :</strong> 
+                                {% for filiere in objet.filieres.all %}
+                                    <span class="badge bg-primary">{{ filiere.nom }}</span>
+                                {% empty %}
+                                    <span class="text-muted">Aucune filière</span>
+                                {% endfor %}
+                            </p>
+                            <p class="mb-0"><strong>Statut :</strong> 
+                                {% if objet.actif %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'liste_classes' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Confirmer la suppression
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

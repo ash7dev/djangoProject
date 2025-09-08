@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de Bord - Gestion des Cours{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- En-tête -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="fas fa-tachometer-alt text-primary"></i> Tableau de Bord</h2>
+            <p class="text-muted">Vue d'ensemble de votre système de gestion des cours</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'ajouter_cours' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Nouveau Cours
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistiques principales -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <a href="{% url 'liste_classes' %}" class="text-decoration-none">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-2x mb-2"></i>
+                        <h3 class="text-white">{{ total_classes|default:0 }}</h3>
+                        <p class="mb-0">Classes</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'liste_professeurs' %}" class="text-decoration-none">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-tie fa-2x mb-2"></i>
+                        <h3 class="text-white">{{ total_professeurs|default:0 }}</h3>
+                        <p class="mb-0">Professeurs</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'liste_matieres' %}" class="text-decoration-none">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body text-center">
+                        <i class="fas fa-book fa-2x mb-2 text-white"></i>
+                        <h3 class="text-white">{{ total_matieres|default:0 }}</h3>
+                        <p class="mb-0 text-white">Matières</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'liste_cours' %}" class="text-decoration-none">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar fa-2x mb-2"></i>
+                        <h3 class="text-white">{{ total_cours|default:0 }}</h3>
+                        <p class="mb-0">Cours programmés</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="row">
+        <!-- Cours récents -->
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-clock"></i> Cours Récents</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if cours_recents %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th><i class="fas fa-calendar"></i> Date</th>
+                                        <th><i class="fas fa-clock"></i> Heure</th>
+                                        <th><i class="fas fa-book"></i> Matière</th>
+                                        <th><i class="fas fa-users"></i> Classe</th>
+                                        <th><i class="fas fa-user-tie"></i> Professeur</th>
+                                        <th><i class="fas fa-map-marker-alt"></i> Salle</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for cours in cours_recents %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-primary">{{ cours.date|date:"d/m/Y" }}</span>
+                                        </td>
+                                        <td>{{ cours.heure_debut|time:"H:i" }} - {{ cours.heure_fin|time:"H:i" }}</td>
+                                        <td>
+                                            <strong>{{ cours.matiere.nom }}</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ cours.classe.nom }}</span>
+                                        </td>
+                                        <td>
+                                            {% if cours.professeur %}
+                                                <span class="badge bg-success">{{ cours.professeur.nom }} {{ cours.professeur.prenom }}</span>
+                                            {% else %}
+                                                <span class="text-muted">Non assigné</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-warning">{{ cours.salle }}</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Aucun cours programmé</h5>
+                            <p class="text-muted">Commencez par programmer vos premiers cours.</p>
+                            <a href="{% url 'ajouter_cours' %}" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Programmer un cours
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions rapides et statistiques -->
+        <div class="col-md-4">
+            <!-- Actions rapides -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Actions Rapides</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'ajouter_classe' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-users"></i> Nouvelle Classe
+                        </a>
+                        <a href="{% url 'ajouter_professeur' %}" class="btn btn-outline-success">
+                            <i class="fas fa-user-tie"></i> Nouveau Professeur
+                        </a>
+                        <a href="{% url 'ajouter_matiere' %}" class="btn btn-outline-warning">
+                            <i class="fas fa-book"></i> Nouvelle Matière
+                        </a>
+                        <a href="{% url 'ajouter_filiere' %}" class="btn btn-outline-info">
+                            <i class="fas fa-graduation-cap"></i> Nouvelle Filière
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiques détaillées -->
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Statistiques</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <a href="{% url 'liste_filieres' %}" class="text-decoration-none">
+                                <div class="border rounded p-3">
+                                    <i class="fas fa-graduation-cap fa-2x text-primary mb-2"></i>
+                                    <h4 class="text-primary">{{ total_filieres|default:0 }}</h4>
+                                    <small class="text-muted">Filières</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <a href="{% url 'liste_matieres' %}" class="text-decoration-none">
+                                <div class="border rounded p-3">
+                                    <i class="fas fa-clock fa-2x text-success mb-2"></i>
+                                    <h4 class="text-success">{{ total_heures|default:0 }}h</h4>
+                                    <small class="text-muted">Heures totales</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <a href="{% url 'liste_classes' %}" class="text-decoration-none">
+                                <div class="border rounded p-3">
+                                    <i class="fas fa-user-graduate fa-2x text-warning mb-2"></i>
+                                    <h4 class="text-warning">{{ total_etudiants|default:0 }}</h4>
+                                    <small class="text-muted">Étudiants max</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <a href="{% url 'liste_cours' %}" class="text-decoration-none">
+                                <div class="border rounded p-3">
+                                    <i class="fas fa-building fa-2x text-info mb-2"></i>
+                                    <h4 class="text-info">{{ salles_utilisees|default:0 }}</h4>
+                                    <small class="text-muted">Salles utilisées</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liens rapides -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-link"></i> Navigation Rapide</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'liste_classes' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-users"></i><br>
+                                <strong>Classes</strong><br>
+                                <small>{{ total_classes|default:0 }} classes</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'liste_professeurs' %}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-user-tie"></i><br>
+                                <strong>Professeurs</strong><br>
+                                <small>{{ total_professeurs|default:0 }} professeurs</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'liste_matieres' %}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-book"></i><br>
+                                <strong>Matières</strong><br>
+                                <small>{{ total_matieres|default:0 }} matières</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'liste_cours' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-calendar"></i><br>
+                                <strong>Cours</strong><br>
+                                <small>{{ total_cours|default:0 }} cours</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

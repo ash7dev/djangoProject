@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Filières - Gestion des Cours{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-graduation-cap"></i> Liste des Filières
+                </h5>
+                <a href="{% url 'ajouter_filiere' %}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Ajouter une filière
+                </a>
+            </div>
+            <div class="card-body">
+                {% if filieres %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-hashtag"></i> ID</th>
+                                    <th><i class="fas fa-tag"></i> Nom</th>
+                                    <th><i class="fas fa-align-left"></i> Description</th>
+                                    <th><i class="fas fa-calendar"></i> Date de création</th>
+                                    <th><i class="fas fa-cogs"></i> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for filiere in filieres %}
+                                <tr>
+                                    <td>{{ filiere.id }}</td>
+                                    <td><strong>{{ filiere.nom }}</strong></td>
+                                    <td>{{ filiere.description|truncatewords:10 }}</td>
+                                    <td>{{ filiere.date_creation|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'modifier_filiere' filiere.id %}" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-edit"></i> Modifier
+                                            </a>
+                                            <a href="{% url 'supprimer_filiere' filiere.id %}" class="btn btn-danger btn-sm" 
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?')">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                    <nav aria-label="Navigation des pages">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">
+                                        <i class="fas fa-angle-double-left"></i> Premier
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="fas fa-angle-left"></i> Précédent
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                        Suivant <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                        Dernier <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-graduation-cap fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucune filière trouvée</h5>
+                        <p class="text-muted">Commencez par ajouter votre première filière.</p>
+                        <a href="{% url 'ajouter_filiere' %}" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Ajouter une filière
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistiques rapides -->
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-graduation-cap fa-2x text-primary mb-2"></i>
+                <h6 class="card-title">Total Filières</h6>
+                <h3 class="text-primary">{{ filieres.count|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-2x text-success mb-2"></i>
+                <h6 class="card-title">Classes Associées</h6>
+                <h3 class="text-success">{{ total_classes|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-2x text-warning mb-2"></i>
+                <h6 class="card-title">Cours Total</h6>
+                <h3 class="text-warning">{{ total_cours|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

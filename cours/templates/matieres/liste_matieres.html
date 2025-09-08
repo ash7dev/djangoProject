@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Matières - Gestion des Cours{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-book"></i> Liste des Matières
+                </h5>
+                <div>
+                    <a href="{% url 'ajouter_matiere' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Ajouter une matière
+                    </a>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filtreModal">
+                        <i class="fas fa-filter"></i> Filtrer
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if matieres %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-hashtag"></i> ID</th>
+                                    <th><i class="fas fa-tag"></i> Nom</th>
+                                    <th><i class="fas fa-user-tie"></i> Professeur</th>
+                                    <th><i class="fas fa-clock"></i> Heures</th>
+                                    <th><i class="fas fa-graduation-cap"></i> Filières</th>
+                                    <th><i class="fas fa-cogs"></i> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for matiere in matieres %}
+                                <tr>
+                                    <td>{{ matiere.id }}</td>
+                                    <td><strong>{{ matiere.nom }}</strong></td>
+                                    <td>
+                                        {% if matiere.professeur %}
+                                            <span class="badge bg-info">{{ matiere.professeur.nom }} {{ matiere.professeur.prenom }}</span>
+                                        {% else %}
+                                            <span class="text-muted">Non assigné</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">{{ matiere.volume_horaire }}h</span>
+                                    </td>
+                                    <td>
+                                        {% for filiere in matiere.filieres.all %}
+                                            <span class="badge bg-primary">{{ filiere.nom }}</span>
+                                        {% empty %}
+                                            <span class="text-muted">Toutes filières</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'modifier_matiere' matiere.id %}" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-edit"></i> Modifier
+                                            </a>
+                                            <a href="{% url 'supprimer_matiere' matiere.id %}" class="btn btn-danger btn-sm"
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette matière ?')">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                    <nav aria-label="Navigation des pages">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">
+                                        <i class="fas fa-angle-double-left"></i> Premier
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="fas fa-angle-left"></i> Précédent
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                        Suivant <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                        Dernier <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucune matière trouvée</h5>
+                        <p class="text-muted">Commencez par ajouter votre première matière.</p>
+                        <a href="{% url 'ajouter_matiere' %}" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Ajouter une matière
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistiques rapides -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-2x text-primary mb-2"></i>
+                <h6 class="card-title">Total Matières</h6>
+                <h3 class="text-primary">{{ matieres.count|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-user-tie fa-2x text-success mb-2"></i>
+                <h6 class="card-title">Professeurs Assignés</h6>
+                <h3 class="text-success">{{ profs_assignes|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                <h6 class="card-title">Heures Total</h6>
+                <h3 class="text-warning">{{ heures_total|default:0 }}h</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar fa-2x text-danger mb-2"></i>
+                <h6 class="card-title">Cours Programmés</h6>
+                <h3 class="text-danger">{{ cours_programmes|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de filtrage -->
+<div class="modal fade" id="filtreModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-filter"></i> Filtrer les matières
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="get">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="professeur" class="form-label">Professeur</label>
+                        <select class="form-select" name="professeur" id="professeur">
+                            <option value="">Tous les professeurs</option>
+                            {% for prof in professeurs_list %}
+                            <option value="{{ prof.id }}" {% if request.GET.professeur == prof.id|stringformat:"s" %}selected{% endif %}>
+                                {{ prof.nom }} {{ prof.prenom }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="filiere" class="form-label">Filière</label>
+                        <select class="form-select" name="filiere" id="filiere">
+                            <option value="">Toutes les filières</option>
+                            {% for filiere in filieres_list %}
+                            <option value="{{ filiere.id }}" {% if request.GET.filiere == filiere.id|stringformat:"s" %}selected{% endif %}>
+                                {{ filiere.nom }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Appliquer les filtres
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

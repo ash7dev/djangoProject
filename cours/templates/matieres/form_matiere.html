@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">
+                        <i class="fas fa-book"></i> {{ titre }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Nom -->
+                        <div class="mb-3">
+                            <label for="{{ form.nom.id_for_label }}" class="form-label">
+                                <i class="fas fa-book text-warning"></i> Nom *
+                            </label>
+                            {{ form.nom }}
+                            {% if form.nom.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {% for error in form.nom.errors %}
+                                        <small><i class="fas fa-exclamation-triangle"></i> {{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Nom de la matière (ex: Programmation Python)
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                <i class="fas fa-align-left text-info"></i> Description
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {% for error in form.description.errors %}
+                                        <small><i class="fas fa-exclamation-triangle"></i> {{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Description détaillée de la matière
+                            </div>
+                        </div>
+
+                        <!-- Volume horaire -->
+                        <div class="mb-3">
+                            <label for="{{ form.volume_horaire.id_for_label }}" class="form-label">
+                                <i class="fas fa-clock text-success"></i> Volume horaire *
+                            </label>
+                            {{ form.volume_horaire }}
+                            {% if form.volume_horaire.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {% for error in form.volume_horaire.errors %}
+                                        <small><i class="fas fa-exclamation-triangle"></i> {{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Volume horaire total en heures
+                            </div>
+                        </div>
+
+                        <!-- Professeur -->
+                        <div class="mb-3">
+                            <label for="{{ form.professeur.id_for_label }}" class="form-label">
+                                <i class="fas fa-user-tie text-primary"></i> Professeur
+                            </label>
+                            {{ form.professeur }}
+                            {% if form.professeur.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {% for error in form.professeur.errors %}
+                                        <small><i class="fas fa-exclamation-triangle"></i> {{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Professeur responsable de cette matière
+                            </div>
+                        </div>
+
+                        <!-- Statut actif -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.actif }}
+                                <label class="form-check-label" for="{{ form.actif.id_for_label }}">
+                                    <i class="fas fa-check-circle text-success"></i> Matière active
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'liste_matieres' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

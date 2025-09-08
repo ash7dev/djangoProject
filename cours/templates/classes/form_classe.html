@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle"></i> {{ titre }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Nom -->
+                        <div class="mb-3">
+                            <label for="{{ form.nom.id_for_label }}" class="form-label">
+                                <i class="fas fa-users text-primary"></i> Nom *
+                            </label>
+                            {{ form.nom }}
+                            {% if form.nom.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {% for error in form.nom.errors %}
+                                        <small><i class="fas fa-exclamation-triangle"></i> {{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Nom de la classe (ex: L1 Informatique)
+                            </div>
+                        </div>
+
+                        <!-- Filières -->
+                        <div class="mb-3">
+                            <label for="{{ form.filieres.id_for_label }}" class="form-label">
+                                <i class="fas fa-graduation-cap text-success"></i> Filières *
+                            </label>
+                            {{ form.filieres }}
+                            {% if form.filieres.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {% for error in form.filieres.errors %}
+                                        <small><i class="fas fa-exclamation-triangle"></i> {{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Sélectionnez une ou plusieurs filières
+                            </div>
+                        </div>
+
+                        <!-- Niveau -->
+                        <div class="mb-3">
+                            <label for="{{ form.niveau.id_for_label }}" class="form-label">
+                                <i class="fas fa-layer-group text-info"></i> Niveau *
+                            </label>
+                            {{ form.niveau }}
+                            {% if form.niveau.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {% for error in form.niveau.errors %}
+                                        <small><i class="fas fa-exclamation-triangle"></i> {{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Effectif maximum -->
+                        <div class="mb-3">
+                            <label for="{{ form.effectif_max.id_for_label }}" class="form-label">
+                                <i class="fas fa-users text-warning"></i> Effectif maximum
+                            </label>
+                            {{ form.effectif_max }}
+                            {% if form.effectif_max.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {% for error in form.effectif_max.errors %}
+                                        <small><i class="fas fa-exclamation-triangle"></i> {{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Nombre maximum d'étudiants dans cette classe
+                            </div>
+                        </div>
+
+                        <!-- Statut actif -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.actif }}
+                                <label class="form-check-label" for="{{ form.actif.id_for_label }}">
+                                    <i class="fas fa-check-circle text-success"></i> Classe active
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'liste_classes' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

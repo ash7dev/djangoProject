@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Professeurs - Gestion des Cours{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-chalkboard-teacher"></i> Liste des Professeurs
+                </h5>
+                <div>
+                    <a href="{% url 'ajouter_professeur' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Ajouter un professeur
+                    </a>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filtreModal">
+                        <i class="fas fa-filter"></i> Filtrer
+                    </button>
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="view" id="view-table" autocomplete="off" checked>
+                        <label class="btn btn-outline-primary" for="view-table">
+                            <i class="fas fa-table"></i>
+                        </label>
+                        <input type="radio" class="btn-check" name="view" id="view-cards" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="view-cards">
+                            <i class="fas fa-th"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if professeurs %}
+                    <!-- Vue tableau -->
+                    <div id="table-view">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-hashtag"></i> ID</th>
+                                        <th><i class="fas fa-user"></i> Nom</th>
+                                        <th><i class="fas fa-user"></i> Prénom</th>
+                                        <th><i class="fas fa-envelope"></i> Email</th>
+                                        <th><i class="fas fa-phone"></i> Téléphone</th>
+                                        <th><i class="fas fa-graduation-cap"></i> Spécialité</th>
+                                        <th><i class="fas fa-cogs"></i> Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for professeur in professeurs %}
+                                    <tr>
+                                        <td>{{ professeur.id }}</td>
+                                        <td><strong>{{ professeur.nom }}</strong></td>
+                                        <td><strong>{{ professeur.prenom }}</strong></td>
+                                        <td>
+                                            {% if professeur.email %}
+                                                <a href="mailto:{{ professeur.email }}" class="text-decoration-none">
+                                                    <i class="fas fa-envelope"></i> {{ professeur.email }}
+                                                </a>
+                                            {% else %}
+                                                <span class="text-muted">Non renseigné</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if professeur.telephone %}
+                                                <a href="tel:{{ professeur.telephone }}" class="text-decoration-none">
+                                                    <i class="fas fa-phone"></i> {{ professeur.telephone }}
+                                                </a>
+                                            {% else %}
+                                                <span class="text-muted">Non renseigné</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if professeur.specialite %}
+                                                <span class="badge bg-info">{{ professeur.specialite }}</span>
+                                            {% else %}
+                                                <span class="text-muted">Non renseigné</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{% url 'modifier_professeur' professeur.id %}" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-edit"></i> Modifier
+                                                </a>
+                                                <a href="{% url 'supprimer_professeur' professeur.id %}" class="btn btn-danger btn-sm" 
+                                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce professeur ?')">
+                                                    <i class="fas fa-trash"></i> Supprimer
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Vue cartes -->
+                    <div id="cards-view" style="display: none;">
+                        <div class="row">
+                            {% for professeur in professeurs %}
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-chalkboard-teacher"></i> {{ professeur.nom_complet }}
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">
+                                            <strong>Email:</strong> 
+                                            {% if professeur.email %}
+                                                <a href="mailto:{{ professeur.email }}">{{ professeur.email }}</a>
+                                            {% else %}
+                                                <span class="text-muted">Non renseigné</span>
+                                            {% endif %}<br>
+                                            <strong>Téléphone:</strong> 
+                                            {% if professeur.telephone %}
+                                                <a href="tel:{{ professeur.telephone }}">{{ professeur.telephone }}</a>
+                                            {% else %}
+                                                <span class="text-muted">Non renseigné</span>
+                                            {% endif %}<br>
+                                            <strong>Spécialité:</strong> 
+                                            {% if professeur.specialite %}
+                                                <span class="badge bg-info">{{ professeur.specialite }}</span>
+                                            {% else %}
+                                                <span class="text-muted">Non renseigné</span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="btn-group w-100" role="group">
+                                            <a href="{% url 'modifier_professeur' professeur.id %}" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-edit"></i> Modifier
+                                            </a>
+                                            <a href="{% url 'supprimer_professeur' professeur.id %}" class="btn btn-danger btn-sm" 
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce professeur ?')">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                    <nav aria-label="Navigation des pages">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">
+                                        <i class="fas fa-angle-double-left"></i> Premier
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="fas fa-angle-left"></i> Précédent
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                        Suivant <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                        Dernier <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-chalkboard-teacher fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucun professeur trouvé</h5>
+                        <p class="text-muted">Commencez par ajouter votre premier professeur.</p>
+                        <a href="{% url 'ajouter_professeur' %}" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Ajouter un professeur
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistiques rapides -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-chalkboard-teacher fa-2x text-primary mb-2"></i>
+                <h6 class="card-title">Total Professeurs</h6>
+                <h3 class="text-primary">{{ professeurs.count|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-2x text-success mb-2"></i>
+                <h6 class="card-title">Cours Assignés</h6>
+                <h3 class="text-success">{{ total_cours|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-graduation-cap fa-2x text-warning mb-2"></i>
+                <h6 class="card-title">Spécialités</h6>
+                <h3 class="text-warning">{{ specialites_count|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-clock fa-2x text-danger mb-2"></i>
+                <h6 class="card-title">Heures Total</h6>
+                <h3 class="text-danger">{{ total_heures|default:0 }}h</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de filtrage -->
+<div class="modal fade" id="filtreModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-filter"></i> Filtrer les professeurs
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="get">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="specialite" class="form-label">Spécialité</label>
+                        <select class="form-select" name="specialite" id="specialite">
+                            <option value="">Toutes les spécialités</option>
+                            {% for specialite in specialites_list %}
+                                <option value="{{ specialite }}" {% if request.GET.specialite == specialite %}selected{% endif %}>
+                                    {{ specialite }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="recherche" class="form-label">Recherche</label>
+                        <input type="text" class="form-control" name="recherche" id="recherche" 
+                               placeholder="Nom, prénom ou email..." value="{{ request.GET.recherche }}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Appliquer les filtres
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript pour la vue tableau/cartes -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const viewTable = document.getElementById('view-table');
+    const viewCards = document.getElementById('view-cards');
+    const tableView = document.getElementById('table-view');
+    const cardsView = document.getElementById('cards-view');
+
+    viewTable.addEventListener('change', function() {
+        if (this.checked) {
+            tableView.style.display = 'block';
+            cardsView.style.display = 'none';
+        }
+    });
+
+    viewCards.addEventListener('change', function() {
+        if (this.checked) {
+            tableView.style.display = 'none';
+            cardsView.style.display = 'block';
+        }
+    });
+});
+</script>
+{% endblock %} 

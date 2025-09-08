@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "buildCommand": "python manage.py collectstatic --noinput && python manage.py migrate",
+  "installCommand": "pip install -r requirements.txt",
+  "builds": [
+    {
+      "src": "monprojet/wsgi.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "pythonRuntime": "python3.9"
+      }
+    },
+    {
+      "src": "staticfiles/",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/monprojet/wsgi.py"
+    }
+  ],
+  "env": {
+    "DEBUG": "False",
+    "SECRET_KEY": "@django_secret_key",
+    "ALLOWED_HOSTS": ".vercel.app"
+  },
+  "outputDirectory": "staticfiles"
+}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmer la suppression{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h4 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle"></i> Confirmer la suppression
+                </h4>
+            </div>
+            <div class="card-body p-4 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-user-times fa-3x text-danger mb-3"></i>
+                    <h5>Êtes-vous sûr de vouloir supprimer ce professeur ?</h5>
+                </div>
+
+                <div class="alert alert-warning">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-info-circle"></i> Professeur à supprimer :
+                    </h6>
+                    <p class="mb-0">
+                        <strong>{{ objet.nom_complet }}</strong><br>
+                        {% if objet.specialite %}
+                            <small class="text-muted">Spécialité : {{ objet.specialite }}</small>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="alert alert-danger">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i> Attention !
+                    </h6>
+                    <p class="mb-0">
+                        Cette action est irréversible. Toutes les données associées à ce professeur 
+                        (matières enseignées, cours programmés) seront également supprimées.
+                    </p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{% url 'liste_professeurs' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Confirmer la suppression
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

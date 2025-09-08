@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Classes - Gestion des Cours{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-users"></i> Liste des Classes
+                </h5>
+                <div>
+                    <a href="{% url 'ajouter_classe' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Ajouter une classe
+                    </a>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filtreModal">
+                        <i class="fas fa-filter"></i> Filtrer
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if classes %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-hashtag"></i> ID</th>
+                                    <th><i class="fas fa-tag"></i> Nom</th>
+                                    <th><i class="fas fa-graduation-cap"></i> Filières</th>
+                                    <th><i class="fas fa-layer-group"></i> Niveau</th>
+                                    <th><i class="fas fa-user-graduate"></i> Effectif</th>
+                                    <th><i class="fas fa-cogs"></i> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for classe in classes %}
+                                <tr>
+                                    <td>{{ classe.id }}</td>
+                                    <td><strong>{{ classe.nom }}</strong></td>
+                                    <td>
+                                        {% for filiere in classe.filieres.all %}
+                                            <span class="badge bg-primary">{{ filiere.nom }}</span>
+                                        {% empty %}
+                                            <span class="text-muted">Aucune filière</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ classe.niveau }}</td>
+                                    <td>
+                                        <span class="badge bg-info">{{ classe.effectif_max }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'modifier_classe' classe.id %}" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-edit"></i> Modifier
+                                            </a>
+                                            <a href="{% url 'supprimer_classe' classe.id %}" class="btn btn-danger btn-sm"
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette classe ?')">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                    <nav aria-label="Navigation des pages">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">
+                                        <i class="fas fa-angle-double-left"></i> Premier
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="fas fa-angle-left"></i> Précédent
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                        Suivant <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                        Dernier <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucune classe trouvée</h5>
+                        <p class="text-muted">Commencez par ajouter votre première classe.</p>
+                        <a href="{% url 'ajouter_classe' %}" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Ajouter une classe
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistiques rapides -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                <h6 class="card-title">Total Classes</h6>
+                <h3 class="text-primary">{{ classes.count|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-user-graduate fa-2x text-success mb-2"></i>
+                <h6 class="card-title">Total Étudiants</h6>
+                <h3 class="text-success">{{ total_etudiants|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-graduation-cap fa-2x text-warning mb-2"></i>
+                <h6 class="card-title">Filières Actives</h6>
+                <h3 class="text-warning">{{ filieres_actives|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-2x text-danger mb-2"></i>
+                <h6 class="card-title">Cours Programmés</h6>
+                <h3 class="text-danger">{{ cours_programmes|default:0 }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de filtrage -->
+<div class="modal fade" id="filtreModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-filter"></i> Filtrer les classes
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="get">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="filiere" class="form-label">Filière</label>
+                        <select class="form-select" name="filiere" id="filiere">
+                            <option value="">Toutes les filières</option>
+                            {% for filiere in filieres_list %}
+                            <option value="{{ filiere.id }}" {% if request.GET.filiere == filiere.id|stringformat:"s" %}selected{% endif %}>
+                                {{ filiere.nom }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="niveau" class="form-label">Niveau</label>
+                        <select class="form-select" name="niveau" id="niveau">
+                            <option value="">Tous les niveaux</option>
+                            <option value="L1" {% if request.GET.niveau == "L1" %}selected{% endif %}>Licence 1</option>
+                            <option value="L2" {% if request.GET.niveau == "L2" %}selected{% endif %}>Licence 2</option>
+                            <option value="L3" {% if request.GET.niveau == "L3" %}selected{% endif %}>Licence 3</option>
+                            <option value="M1" {% if request.GET.niveau == "M1" %}selected{% endif %}>Master 1</option>
+                            <option value="M2" {% if request.GET.niveau == "M2" %}selected{% endif %}>Master 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Appliquer les filtres
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

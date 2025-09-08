@@ -1,0 +1,25 @@
+{
+  "deploy": {
+    "module": "gunicorn monprojet.wsgi:application",
+    "package": ".",
+    "install": {
+      "requirements": "requirements.txt"
+    },
+    "hooks": {
+      "prebuild": "python manage.py collectstatic --noinput",
+      "postbuild": "python manage.py migrate"
+    }
+  },
+  "build": {
+    "type": "python",
+    "python_version": "3.9"
+  },
+  "environment": {
+    "PYTHONPATH": "$PYTHONPATH:.",
+    "DJANGO_SETTINGS_MODULE": "monprojet.settings"
+  },
+  "hooks": {
+    "prebuild": "python manage.py collectstatic --noinput",
+    "postbuild": "python manage.py migrate"
+  }
+}
