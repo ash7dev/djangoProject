@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "python manage.py collectstatic --noinput && python manage.py migrate",
-  "installCommand": "pip install -r requirements.txt",
   "builds": [
     {
       "src": "monprojet/wsgi.py",
@@ -27,9 +25,18 @@
     }
   ],
   "env": {
-    "DEBUG": "False",
+    "PYTHONPATH": "/var/task:/var/task/monprojet",
+    "DJANGO_SETTINGS_MODULE": "monprojet.settings",
+    "DEBUG": "True",
     "SECRET_KEY": "e*0=q3*u24=g)nnew%jkthmluo2let$ia9j#$($ia-8+dl=^2+",
     "ALLOWED_HOSTS": ".vercel.app"
   },
+  "build": {
+    "env": {
+      "PYTHONPATH": "/var/task:/var/task/monprojet"
+    }
+  },
+  "buildCommand": "python manage.py collectstatic --noinput",
+  "installCommand": "pip install -r requirements.txt",
   "outputDirectory": "staticfiles"
 }

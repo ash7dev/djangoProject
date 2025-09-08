@@ -8,15 +8,25 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
 """
 
 import os
+import sys
+from pathlib import Path
 from django.core.wsgi import get_wsgi_application
 from whitenoise import WhiteNoise
-from pathlib import Path
+
+# Ajouter le chemin du projet au PYTHONPATH
+BASE_DIR = Path(__file__).resolve().parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.append(str(BASE_DIR))
 
 # Configuration de l'environnement Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'monprojet.settings')
 
 # Application WSGI de base
 application = get_wsgi_application()
+
+# Configuration de WhiteNoise pour servir les fichiers statiques
+application = WhiteNoise(application, root=os.path.join(BASE_DIR, 'staticfiles'))
+application.add_files(os.path.join(BASE_DIR, 'static'), prefix='static/')
 
 # Configuration WhiteNoise pour les fichiers statiques
 # Ne fonctionne que si DEBUG=False dans les paramètres
