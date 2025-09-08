@@ -28,7 +28,7 @@
   ],
   "env": {
     "DEBUG": "False",
-    "SECRET_KEY": "@django_secret_key",
+    "SECRET_KEY": "e*0=q3*u24=g)nnew%jkthmluo2let$ia9j#$($ia-8+dl=^2+",
     "ALLOWED_HOSTS": ".vercel.app"
   },
   "outputDirectory": "staticfiles"
