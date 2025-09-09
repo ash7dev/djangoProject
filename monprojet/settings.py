@@ -82,51 +82,28 @@ WSGI_APPLICATION = 'monprojet.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Configuration de base de données
-# Utilisation de SQLite pour le développement local
+# Configuration de la base de données PostgreSQL pour Supabase
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'coursdb',
+        'USER': 'postgres',
+        'PASSWORD': 'Senegale1228/',
+        'HOST': 'db.xsepgmurvwguoygdmlza.supabase.co',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
 
-# Configuration pour Vercel avec variable d'environnement DATABASE_URL
-if 'DATABASE_URL' in os.environ:
-    import dj_database_url
+# Surcharge avec DATABASE_URL si disponible (pour Vercel)
+if os.getenv('DATABASE_URL'):
     DATABASES['default'] = dj_database_url.config(
         conn_max_age=600,
         conn_health_checks=True,
         ssl_require=True
     )
-
-# Configuration pour Clever Cloud (priorité à DATABASE_URL si disponible)
-if 'DATABASE_URL' in os.environ:
-    import dj_database_url
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-elif 'MYSQL_ADDON_URI' in os.environ:
-    import dj_database_url
-    db_from_env = dj_database_url.parse(os.environ['MYSQL_ADDON_URI'], conn_max_age=600)
-    db_from_env.update({
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'ssl': {'ca': os.getenv('MYSQL_ADDON_SSL_CA')} if os.getenv('MYSQL_ADDON_SSL_CA') else {},
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
-    })
-    DATABASES['default'] = db_from_env
-
-#MySQL
-""" DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'coursdb',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-    }
-} """
 
 
 # Password validation

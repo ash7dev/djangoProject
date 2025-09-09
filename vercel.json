@@ -23,9 +23,10 @@
   "env": {
     "PYTHONPATH": "/var/task:/var/task/monprojet",
     "DJANGO_SETTINGS_MODULE": "monprojet.settings",
-    "DEBUG": "True",
+    "DEBUG": "False",
     "SECRET_KEY": "e*0=q3*u24=g)nnew%jkthmluo2let$ia9j#$($ia-8+dl=^2+",
-    "ALLOWED_HOSTS": ".vercel.app"
+    "ALLOWED_HOSTS": ".vercel.app",
+    "DATABASE_URL": "postgresql://postgres:Senegale1228/@db.zxyxyemjtllphzrqdplk.supabase.co:5432/postgres"
   },
   "build": {
     "env": {
@@ -34,5 +35,6 @@
   },
   "buildCommand": "python manage.py collectstatic --noinput && python manage.py migrate",
   "installCommand": "pip install -r requirements.txt",
-  "outputDirectory": "staticfiles"
+  "outputDirectory": "staticfiles",
+  "regions": ["iad1", "sfo1"]
 }
