@@ -2,12 +2,12 @@ import psycopg2
 from psycopg2 import sql
 import ssl
 
-# Paramètres de connexion depuis .env.example
+# Paramètres de connexion mis à jour
 db_params = {
-    'dbname': 'coursdb',
+    'dbname': 'postgres',
     'user': 'postgres',
     'password': 'Senegale1228/',
-    'host': 'db.xsepgmurvwguoygdmlza.supabase.co',
+    'host': 'db.zxyxyemjtllphzrqdplk.supabase.co',
     'port': '5432',
     'sslmode': 'require',
     'options': '-c search_path=public',

@@ -4,10 +4,10 @@ import socket
 def test_supabase_connection():
     # Paramètres de connexion à Supabase
     db_params = {
-        'dbname': 'postgres',
+        'dbname': 'coursdb',
         'user': 'postgres',
         'password': 'Senegale1228/',
-        'host': 'db.zxyxyemjtllphzrqdplk.supabase.co',
+        'host': 'db.xsepgmurvwguoygdmlza.supabase.co',
         'port': 5432,
         'sslmode': 'require',
         'connect_timeout': 10

@@ -26,7 +26,7 @@
     "DEBUG": "False",
     "SECRET_KEY": "e*0=q3*u24=g)nnew%jkthmluo2let$ia9j#$($ia-8+dl=^2+",
     "ALLOWED_HOSTS": ".vercel.app",
-    "DATABASE_URL": "postgresql://postgres:Senegale1228/@db.zxyxyemjtllphzrqdplk.supabase.co:5432/postgres"
+    "DATABASE_URL": "postgresql://postgres:Senegale1228/@db.xsepgmurvwguoygdmlza.supabase.co:5432/coursdb"
   },
   "build": {
     "env": {

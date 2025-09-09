@@ -86,13 +86,15 @@ WSGI_APPLICATION = 'monprojet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'coursdb',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'Senegale1228/',
-        'HOST': 'db.xsepgmurvwguoygdmlza.supabase.co',
+        'HOST': 'db.zxyxyemjtllphzrqdplk.supabase.co',
         'PORT': '5432',
         'OPTIONS': {
             'sslmode': 'require',
+            'options': '-c search_path=public',
+            'connect_timeout': '10',
         },
     }
 }

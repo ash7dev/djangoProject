@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 
 def test_connection():
     # URL de connexion complète (format correct avec deux-points avant le mot de passe)
-    db_url = "postgresql://postgres:Senegale1228@db.zxyxyemjtllphzrqdplk.supabase.co:5432/postgres"
+    db_url = "postgresql://postgres:Senegale1228@db.xsepgmurvwguoygdmlza.supabase.co:5432/coursdb"
     
     try:
         # Parser l'URL
